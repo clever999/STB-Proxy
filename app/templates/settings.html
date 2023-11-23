@@ -92,7 +92,13 @@
     <h4>Playlist</h4>
     <hr>
     <div class="p-sm-3">
+	<h6>Use Useragent:</h6>
+        <div class="form-check form-switch">
+            <input form="save" type="checkbox" class="checkbox form-check-input" name="use Useragent" value="true" {{ "checked" if settings['use Useragent']=='true' }}>
+        </div>
 
+        <br>
+        
         <h6>Use channel genres:</h6>
         <div class="form-check form-switch">
             <input form="save" type="checkbox" class="checkbox form-check-input" name="use channel genres" value="true" {{ "checked" if settings['use channel genres']=='true' }}>

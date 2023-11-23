@@ -46,7 +46,7 @@ basePath = os.path.abspath(os.getcwd())
 if os.getenv("HOST"):
     host = os.getenv("HOST")
 else:
-    host = "localhost:8001"
+    host = "192.168.178.127:8001"
 
 if os.getenv("CONFIG"):
     configFile = os.getenv("CONFIG")
@@ -75,7 +75,8 @@ defaultSettings = {
     "ffmpeg command": "ffmpeg -re -http_proxy <proxy> -timeout <timeout> -i <url> -map 0 -codec copy -f mpegts pipe:",
     "stream timeout": "5",
     "test streams": "true",
-    "try all macs": "false",
+    "try all macs": "false", 
+    "use Useragent": "true",
     "use channel genres": "true",
     "use channel numbers": "true",
     "sort playlist by channel genre": "false",
@@ -732,12 +733,25 @@ def playlist():
                                 + '",'
                                 + channelName
                                 + "\n"
+                                + (
+                                    '#EXTVLCOPT:http-user-agent=VAVOO/2.6'
+                                    if getSettings().get("use Useragent", "true")
+                                    == "true"
+                                    else ""
+                                )
+                                 + (
+                                    '\n'
+                                    if getSettings().get("use Useragent", "true")
+                                    == "true"
+                                    else ""
+                                )
                                 + "http://"
                                 + host
                                 + "/play/"
                                 + portal
                                 + "/"
                                 + channelId
+                                
                             )
                 else:
                     logger.error("Error making playlist for {}, skipping".format(name))
@@ -750,11 +764,12 @@ def playlist():
     if getSettings().get("use channel genres", "true") == "true":
         if getSettings().get("sort playlist by channel genre", "false") == "true":
             channels.sort(key=lambda k: k.split('group-title="')[1].split('"')[0])
-
-    playlist = "#EXTM3U \n"
-    playlist = playlist + "\n".join(channels)
-
+    playlist = f"#EXTM3U url-tvg={host}/xmltv\n"
+    playlist += "\n".join(channels)
     return Response(playlist, mimetype="text/plain")
+
+
+    
 
 
 @app.route("/xmltv", methods=["GET"])
