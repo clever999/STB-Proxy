@@ -46,7 +46,7 @@ basePath = os.path.abspath(os.getcwd())
 if os.getenv("HOST"):
     host = os.getenv("HOST")
 else:
-    host = "192.168.178.127:8001"
+    host = "localhost:8001"
 
 if os.getenv("CONFIG"):
     configFile = os.getenv("CONFIG")
